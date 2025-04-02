@@ -1,0 +1,633 @@
+--------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  ...\ares2019 - regression log.smcl
+  log type:  smcl
+ opened on:  11 Mar 2019, 11:38:14
+
+. do "C:\Users\rtaylor\AppData\Local\Temp\STD05000000.tmp"
+
+. gen rec = 0
+
+. replace rec = 1 if quarter>="1974Q1" & quarter<="1975Q1"
+(216 real changes made)
+
+. replace rec = 1 if quarter>="1980Q2" & quarter<="1980Q3"
+(432 real changes made)
+
+. replace rec = 1 if quarter>="1981Q4" & quarter<="1982Q4"
+(1,080 real changes made)
+
+. replace rec = 1 if quarter>="1990Q4" & quarter<="1991Q1"
+(432 real changes made)
+
+. replace rec = 1 if quarter>="2001Q2" & quarter<="2001Q4"
+(648 real changes made)
+
+. replace rec = 1 if quarter>="2008Q1" & quarter<="2009Q2"
+(1,296 real changes made)
+
+. 
+. logit rec S.lnemp_nat if ptypegeonum==1 & quarter<="2009Q2"
+
+Iteration 0:   log likelihood =    -53.295  
+Iteration 1:   log likelihood = -25.014061  
+Iteration 2:   log likelihood =  -14.98131  
+Iteration 3:   log likelihood = -13.114907  
+Iteration 4:   log likelihood = -13.032111  
+Iteration 5:   log likelihood = -13.031871  
+Iteration 6:   log likelihood = -13.031871  
+
+Logistic regression                             Number of obs     =        137
+                                                LR chi2(1)        =      80.53
+                                                Prob > chi2       =     0.0000
+Log likelihood = -13.031871                     Pseudo R2         =     0.7555
+
+------------------------------------------------------------------------------
+         rec |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   lnemp_nat |
+         S1. |  -871.0072   222.9808    -3.91   0.000    -1308.041   -433.9729
+             |
+       _cons |  -2.501422   .7730169    -3.24   0.001    -4.016507   -.9863367
+------------------------------------------------------------------------------
+Note: 1 failure and 0 successes completely determined.
+
+. predict prec
+(option pr assumed; Pr(rec))
+(216 missing values generated)
+
+. gen precmetro = exp(-872.1725*S1.lnemp-2.51179)/(1+exp(-872.1725*S1.lnemp-2.51179))
+(216 missing values generated)
+
+. 
+end of do-file
+
+. do "C:\Users\rtaylor\AppData\Local\Temp\STD05000000.tmp"
+
+. 
+. gen D_vacancy = D.vacancy
+(27,701 missing values generated)
+
+. gen S4_lnemp = S4.lnemp
+(864 missing values generated)
+
+. gen S4_lnemp_2 = (S4.lnemp)^2
+(864 missing values generated)
+
+. gen S4_lnemp_3 = (S4.lnemp)^3
+(864 missing values generated)
+
+. gen LS4_lnrba = LS4.lnrba
+(28,349 missing values generated)
+
+. 
+. xtreg D_vacancy S4_lnemp LS4_lnrba if xtreghist==1, fe
+
+Fixed-effects (within) regression               Number of obs     =     10,579
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1729                                         min =         44
+     between = 0.0932                                         avg =       63.0
+     overall = 0.1619                                         max =         70
+
+                                                F(2,10409)        =    1087.66
+corr(u_i, Xb)  = -0.2326                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -5.106688   .1579602   -32.33   0.000     -5.41632   -4.797056
+   LS4_lnrba |   9.069667   .3639283    24.92   0.000     8.356298    9.783036
+       _cons |  -.0672026   .0061026   -11.01   0.000    -.0791649   -.0552404
+-------------+----------------------------------------------------------------
+     sigma_u |  .05620865
+     sigma_e |  .37036149
+         rho |  .02251464   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 10409) = 1.26                  Prob > F = 0.0143
+
+. predict xb1, xbu
+(36,293 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba S4_lnemp_2 if xtreghist==1, fe
+
+Fixed-effects (within) regression               Number of obs     =     10,579
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1735                                         min =         44
+     between = 0.0880                                         avg =       63.0
+     overall = 0.1627                                         max =         70
+
+                                                F(3,10408)        =     728.54
+corr(u_i, Xb)  = -0.2291                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -5.324739   .1743529   -30.54   0.000    -5.666504   -4.982974
+   LS4_lnrba |   9.016695   .3642369    24.76   0.000      8.30272    9.730669
+  S4_lnemp_2 |  -12.51198   4.242308    -2.95   0.003    -20.82772   -4.196243
+       _cons |  -.0561042   .0071676    -7.83   0.000     -.070154   -.0420543
+-------------+----------------------------------------------------------------
+     sigma_u |  .05621903
+     sigma_e |  .37022461
+         rho |  .02253904   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 10408) = 1.28                  Prob > F = 0.0089
+
+. predict xb2, xbu
+(36,293 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba S4_lnemp_3 if xtreghist==1, fe
+
+Fixed-effects (within) regression               Number of obs     =     10,579
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1732                                         min =         44
+     between = 0.0898                                         avg =       63.0
+     overall = 0.1622                                         max =         70
+
+                                                F(3,10408)        =     726.70
+corr(u_i, Xb)  = -0.2313                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -5.461306   .2353158   -23.21   0.000     -5.92257   -5.000041
+   LS4_lnrba |   9.024173   .3645611    24.75   0.000     8.309563    9.738782
+  S4_lnemp_3 |   134.3205   66.07403     2.03   0.042      4.80276    263.8383
+       _cons |  -.0632072   .0064104    -9.86   0.000    -.0757728   -.0506416
+-------------+----------------------------------------------------------------
+     sigma_u |  .05627096
+     sigma_e |  .37030578
+         rho |  .02257009   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 10408) = 1.27                  Prob > F = 0.0119
+
+. predict xb3, xbu
+(36,293 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba prec if xtreghist==1, fe
+
+Fixed-effects (within) regression               Number of obs     =     10,579
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1828                                         min =         44
+     between = 0.0831                                         avg =       63.0
+     overall = 0.1723                                         max =         70
+
+                                                F(3,10408)        =     776.29
+corr(u_i, Xb)  = -0.2141                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -3.385134   .2189843   -15.46   0.000    -3.814385   -2.955882
+   LS4_lnrba |   8.455086   .3658237    23.11   0.000     7.738001    9.172171
+        prec |     .19429   .0172275    11.28   0.000     .1605208    .2280592
+       _cons |  -.1039173   .0068843   -15.09   0.000    -.1174118   -.0904228
+-------------+----------------------------------------------------------------
+     sigma_u |  .05500231
+     sigma_e |  .36813671
+         rho |  .02183513   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 10408) = 1.18                  Prob > F = 0.0580
+
+. predict xb4, xbu
+(36,293 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba precmetro if xtreghist==1, fe
+
+Fixed-effects (within) regression               Number of obs     =     10,579
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1852                                         min =         44
+     between = 0.0973                                         avg =       63.0
+     overall = 0.1751                                         max =         70
+
+                                                F(3,10408)        =     788.65
+corr(u_i, Xb)  = -0.2125                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -3.038284   .2273442   -13.36   0.000    -3.483922   -2.592646
+   LS4_lnrba |   8.376759   .3654031    22.92   0.000     7.660498    9.093019
+   precmetro |   .2062974   .0164202    12.56   0.000     .1741107    .2384842
+       _cons |  -.1133906   .0070855   -16.00   0.000    -.1272795   -.0995017
+-------------+----------------------------------------------------------------
+     sigma_u |  .05440615
+     sigma_e |  .36760229
+         rho |  .02143528   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 10408) = 1.18                  Prob > F = 0.0546
+
+. predict xb5, xbu
+(36,293 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba rec if xtreghist==1, fe
+
+Fixed-effects (within) regression               Number of obs     =     10,579
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1924                                         min =         44
+     between = 0.0933                                         avg =       63.0
+     overall = 0.1838                                         max =         70
+
+                                                F(3,10408)        =     826.40
+corr(u_i, Xb)  = -0.1832                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -4.156599   .1671933   -24.86   0.000     -4.48433   -3.828868
+   LS4_lnrba |   7.957051   .3664046    21.72   0.000     7.238827    8.675274
+         rec |   .1872324   .0118054    15.86   0.000     .1640915    .2103733
+       _cons |  -.0865433   .0061525   -14.07   0.000    -.0986034   -.0744832
+-------------+----------------------------------------------------------------
+     sigma_u |  .05159572
+     sigma_e |  .36598323
+         rho |  .01948759   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 10408) = 1.09                  Prob > F = 0.1943
+
+. predict xb6, xbu
+(36,293 missing values generated)
+
+. 
+. // 2007Q4 2012Q4 (2 5-year oos)
+. 
+. xtreg D_vacancy S4_lnemp LS4_lnrba if xtreghist==1 & quarter<="2012Q4", fe
+
+Fixed-effects (within) regression               Number of obs     =      7,051
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1706                                         min =         23
+     between = 0.1371                                         avg =       42.0
+     overall = 0.1590                                         max =         49
+
+                                                F(2,6881)         =     707.66
+corr(u_i, Xb)  = -0.2198                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -4.859417   .1914107   -25.39   0.000    -5.234641   -4.484193
+   LS4_lnrba |   10.18168    .477798    21.31   0.000     9.245046    11.11831
+       _cons |   -.076458   .0079462    -9.62   0.000     -.092035    -.060881
+-------------+----------------------------------------------------------------
+     sigma_u |  .07105613
+     sigma_e |  .39251081
+         rho |  .03173186   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 6881) = 1.20                   Prob > F = 0.0432
+
+. predict xb1_os12, xbu
+(39,821 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba S4_lnemp_2 if xtreghist==1 & quarter<="2012Q4", fe
+
+Fixed-effects (within) regression               Number of obs     =      7,051
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1715                                         min =         23
+     between = 0.1355                                         avg =       42.0
+     overall = 0.1608                                         max =         49
+
+                                                F(3,6880)         =     474.82
+corr(u_i, Xb)  = -0.2042                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -5.185585   .2243615   -23.11   0.000    -5.625403   -4.745767
+   LS4_lnrba |   10.12495   .4779988    21.18   0.000     9.187929    11.06198
+  S4_lnemp_2 |  -13.75475   4.942425    -2.78   0.005    -23.44343   -4.066074
+       _cons |  -.0656078   .0088476    -7.42   0.000    -.0829519   -.0482638
+-------------+----------------------------------------------------------------
+     sigma_u |  .06970935
+     sigma_e |  .39231857
+         rho |  .03060587   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 6880) = 1.18                   Prob > F = 0.0595
+
+. predict xb2_os12, xbu
+(39,821 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba S4_lnemp_3 if xtreghist==1 & quarter<="2012Q4", fe
+
+Fixed-effects (within) regression               Number of obs     =      7,051
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1708                                         min =         23
+     between = 0.1341                                         avg =       42.0
+     overall = 0.1593                                         max =         49
+
+                                                F(3,6880)         =     472.40
+corr(u_i, Xb)  = -0.2169                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -5.133569   .2822566   -18.19   0.000    -5.686879   -4.580259
+   LS4_lnrba |   10.14489   .4785825    21.20   0.000     9.206717    11.08306
+  S4_lnemp_3 |    95.8476   72.52689     1.32   0.186     -46.3275    238.0227
+       _cons |  -.0741376   .0081374    -9.11   0.000    -.0900895   -.0581857
+-------------+----------------------------------------------------------------
+     sigma_u |   .0709423
+     sigma_e |  .39248952
+         rho |  .03163681   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 6880) = 1.20                   Prob > F = 0.0425
+
+. predict xb3_os12, xbu
+(39,821 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba prec if xtreghist==1 & quarter<="2012Q4", fe
+
+Fixed-effects (within) regression               Number of obs     =      7,051
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1839                                         min =         23
+     between = 0.0885                                         avg =       42.0
+     overall = 0.1714                                         max =         49
+
+                                                F(3,6880)         =     516.64
+corr(u_i, Xb)  = -0.1977                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -3.020534   .2574904   -11.73   0.000    -3.525295   -2.515773
+   LS4_lnrba |   9.212738   .4827732    19.08   0.000     8.266353    10.15912
+        prec |   .2008502   .0189949    10.57   0.000     .1636143    .2380861
+       _cons |  -.1114357   .0085489   -13.04   0.000    -.1281941   -.0946772
+-------------+----------------------------------------------------------------
+     sigma_u |  .07228661
+     sigma_e |  .38938809
+         rho |  .03331467   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 6880) = 1.23                   Prob > F = 0.0237
+
+. predict xb4_os12, xbu
+(39,821 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba precmetro if xtreghist==1 & quarter<="2012Q4", fe
+
+Fixed-effects (within) regression               Number of obs     =      7,051
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1873                                         min =         23
+     between = 0.1407                                         avg =       42.0
+     overall = 0.1771                                         max =         49
+
+                                                F(3,6880)         =     528.57
+corr(u_i, Xb)  = -0.1885                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -2.644291   .2656786    -9.95   0.000    -3.165103   -2.123479
+   LS4_lnrba |   9.043769   .4825711    18.74   0.000     8.097781    9.989758
+   precmetro |   .2176534   .0182982    11.89   0.000     .1817834    .2535235
+       _cons |  -.1202501   .0086852   -13.85   0.000    -.1372758   -.1032245
+-------------+----------------------------------------------------------------
+     sigma_u |  .06867331
+     sigma_e |  .38856426
+         rho |  .03028952   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 6880) = 1.16                   Prob > F = 0.0843
+
+. predict xb5_os12, xbu
+(39,821 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba rec if xtreghist==1 & quarter<="2012Q4", fe
+
+Fixed-effects (within) regression               Number of obs     =      7,051
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1954                                         min =         23
+     between = 0.1249                                         avg =       42.0
+     overall = 0.1866                                         max =         49
+
+                                                F(3,6880)         =     556.91
+corr(u_i, Xb)  = -0.1542                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -4.031767   .1969239   -20.47   0.000    -4.417799   -3.645735
+   LS4_lnrba |    8.54188   .4839234    17.65   0.000      7.59324    9.490519
+         rec |   .1857109   .0127545    14.56   0.000     .1607083    .2107136
+       _cons |  -.0923627   .0079029   -11.69   0.000    -.1078548   -.0768705
+-------------+----------------------------------------------------------------
+     sigma_u |  .06673601
+     sigma_e |  .38662756
+         rho |  .02893239   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 6880) = 1.11                   Prob > F = 0.1537
+
+. predict xb6_os12, xbu
+(39,821 missing values generated)
+
+. 
+. xtreg D_vacancy S4_lnemp LS4_lnrba if xtreghist==1 & quarter<="2007Q4", fe
+
+Fixed-effects (within) regression               Number of obs     =      3,691
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1481                                         min =          3
+     between = 0.1345                                         avg =       22.0
+     overall = 0.1374                                         max =         29
+
+                                                F(2,3521)         =     306.07
+corr(u_i, Xb)  = -0.2271                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -7.224799    .445407   -16.22   0.000    -8.098081   -6.351517
+   LS4_lnrba |   10.07042   .8708911    11.56   0.000     8.362917    11.77792
+       _cons |  -.0459492   .0178463    -2.57   0.010    -.0809394    -.010959
+-------------+----------------------------------------------------------------
+     sigma_u |  .11215934
+     sigma_e |  .44448792
+         rho |  .05986087   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 3521) = 0.87                   Prob > F = 0.8817
+
+. predict xb1_os07, xbu
+(43,181 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba S4_lnemp_2 if xtreghist==1 & quarter<="2007Q4", fe
+
+Fixed-effects (within) regression               Number of obs     =      3,691
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1486                                         min =          3
+     between = 0.1254                                         avg =       22.0
+     overall = 0.1376                                         max =         29
+
+                                                F(3,3520)         =     204.72
+corr(u_i, Xb)  = -0.2245                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -7.253882    .445861   -16.27   0.000    -8.128054    -6.37971
+   LS4_lnrba |   10.12358   .8716537    11.61   0.000     8.414586    11.83258
+  S4_lnemp_2 |   -11.4435   8.378454    -1.37   0.172    -27.87062    4.983617
+       _cons |  -.0407742    .018242    -2.24   0.025    -.0765401   -.0050082
+-------------+----------------------------------------------------------------
+     sigma_u |  .11338986
+     sigma_e |  .44443331
+         rho |  .06111498   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 3520) = 0.88                   Prob > F = 0.8644
+
+. predict xb2_os07, xbu
+(43,181 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba S4_lnemp_3 if xtreghist==1 & quarter<="2007Q4", fe
+
+Fixed-effects (within) regression               Number of obs     =      3,691
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1489                                         min =          3
+     between = 0.1343                                         avg =       22.0
+     overall = 0.1381                                         max =         29
+
+                                                F(3,3520)         =     205.21
+corr(u_i, Xb)  = -0.2244                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -7.809704   .5552559   -14.07   0.000    -8.898359   -6.721048
+   LS4_lnrba |   10.03808   .8708236    11.53   0.000     8.330708    11.74545
+  S4_lnemp_3 |   194.4838   110.2998     1.76   0.078     -21.7741    410.7417
+       _cons |  -.0412965   .0180351    -2.29   0.022    -.0766568   -.0059363
+-------------+----------------------------------------------------------------
+     sigma_u |  .11229677
+     sigma_e |  .44435487
+         rho |  .06003264   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 3520) = 0.87                   Prob > F = 0.8733
+
+. predict xb3_os07, xbu
+(43,181 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba prec if xtreghist==1 & quarter<="2007Q4", fe
+
+Fixed-effects (within) regression               Number of obs     =      3,691
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1770                                         min =          3
+     between = 0.2343                                         avg =       22.0
+     overall = 0.1734                                         max =         29
+
+                                                F(3,3520)         =     252.37
+corr(u_i, Xb)  = -0.0947                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -5.188582   .4745954   -10.93   0.000    -6.119092   -4.258072
+   LS4_lnrba |   7.216482   .8937513     8.07   0.000     5.464159    8.968805
+        prec |   .4297771   .0386496    11.12   0.000     .3539992    .5055549
+       _cons |  -.0670487   .0176457    -3.80   0.000    -.1016456   -.0324519
+-------------+----------------------------------------------------------------
+     sigma_u |  .09393537
+     sigma_e |  .43694282
+         rho |  .04417606   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 3520) = 0.69                   Prob > F = 0.9988
+
+. predict xb4_os07, xbu
+(43,181 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba precmetro if xtreghist==1 & quarter<="2007Q4", fe
+
+Fixed-effects (within) regression               Number of obs     =      3,691
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1640                                         min =          3
+     between = 0.1695                                         avg =       22.0
+     overall = 0.1547                                         max =         29
+
+                                                F(3,3520)         =     230.21
+corr(u_i, Xb)  = -0.2106                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -5.022515   .5168307    -9.72   0.000    -6.035832   -4.009197
+   LS4_lnrba |   8.773672   .8772614    10.00   0.000      7.05368    10.49366
+   precmetro |    .255544   .0312172     8.19   0.000     .1943384    .3167496
+       _cons |  -.0887724    .018439    -4.81   0.000    -.1249246   -.0526202
+-------------+----------------------------------------------------------------
+     sigma_u |  .10925471
+     sigma_e |  .44037905
+         rho |  .05798113   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 3520) = 0.85                   Prob > F = 0.9153
+
+. predict xb5_os07, xbu
+(43,181 missing values generated)
+
+. xtreg D_vacancy S4_lnemp LS4_lnrba rec if xtreghist==1 & quarter<="2007Q4", fe
+
+Fixed-effects (within) regression               Number of obs     =      3,691
+Group variable: ptypegeonum                     Number of groups  =        168
+
+R-sq:                                           Obs per group:
+     within  = 0.1823                                         min =          3
+     between = 0.2051                                         avg =       22.0
+     overall = 0.1773                                         max =         29
+
+                                                F(3,3520)         =     261.63
+corr(u_i, Xb)  = -0.1274                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+   D_vacancy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    S4_lnemp |  -6.685203   .4386913   -15.24   0.000    -7.545317   -5.825088
+   LS4_lnrba |   7.157177   .8864614     8.07   0.000     5.419147    8.895207
+         rec |   .3149522   .0259507    12.14   0.000     .2640723    .3658322
+       _cons |  -.0322125   .0175233    -1.84   0.066    -.0665694    .0021445
+-------------+----------------------------------------------------------------
+     sigma_u |  .09827909
+     sigma_e |  .43553194
+         rho |  .04845213   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(167, 3520) = 0.75                   Prob > F = 0.9918
+
+. predict xb6_os07, xbu
+(43,181 missing values generated)
+
+. 
+end of do-file
+
+. log close
+      name:  <unnamed>
+       log:  ...\ares2019 - regression log.smcl
+  log type:  smcl
+ closed on:  11 Mar 2019, 11:39:24
+--------------------------------------------------------------------------------------------
