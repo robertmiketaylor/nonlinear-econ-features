@@ -1,1 +1,7 @@
-# nonlinear-econ-features
+# Nonlinear Macroeconomic Effects in Commercial Real Estate Vacancy Forecast Models
+
+Commercial real estate forecast models are traditionally a function of macroeconomic data and other commercial real estate data.  The independent variables in these models are typically either not transformed, transformed using differences or growth rates, or transformed using logs or log differences.  These models tend to perform well, especially during periods of relatively stable economic growth.  But these models can underperform during periods of very strong or very weak economic conditions.  In reality, this is because the relationship between the economy and commercial real estate is complex and nonlinear.  This paper examines several methods of incorporating this nonlinear relationship into commercial real estate vacancy forecast models, such as by using nonlinear transformations of economic variables and by incorporating a recession dummy variable, and evaluates their performance.  We find that these methods do tend to add information to the forecast model; and that the probability of recession by metro—a nonlinear transformation of employment—performs particularly well.
+
+- Nonlinear Macroeconomic Effects in CRE Forecast Models.pdf is the paper written in Latex (source code in \latex\ folder)
+- ARES 2019 - Presentation.pdf is the conference presentation 
+- log - ares2019 regressions.txt is the Stata log file for the analysis
